@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@tailwind utilities;
+
+/* Estilos personalizados */
+body {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.container {
+  @apply max-w-6xl mx-auto px-4;
+}
