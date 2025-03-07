@@ -1,38 +1,54 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
 function Home() {
+  const [project, setProject] = useState(null);
+
+  useEffect(() => {
+    fetch("http://localhost:3000/api/projects/6")
+      .then((response) => response.json())
+      .then((data) => setProject(data))
+      .catch((error) => console.error("Error al obtener el proyecto:", error));
+  }, []);
+
   return (
     <motion.div
-      className="container text-center py-16"
-      initial={{ opacity: 0, y: -50 }}
-      animate={{ opacity: 1, y: 0 }}
+      className="min-h-screen flex items-center justify-center bg-gray-100 p-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <h1 className="text-4xl font-bold text-blue-600">¡Bienvenido a mi Portafolio!</h1>
-      <p className="mt-4 text-gray-700 text-lg">
-        Explora mis proyectos y conoce más sobre mi trabajo.
-      </p>
+      {project ? (
+        <div className="max-w-3xl w-full bg-white shadow-lg rounded-2xl p-8 text-center">
+          <div className="flex flex-col items-center">
+            {/* Imagen del usuario (Si hay una en la BD) */}
+            {project.image && (
+              <img
+                src={project.image}
+                alt="Foto de perfil"
+                className="w-40 h-40 object-cover rounded-full shadow-md border-4 border-blue-500"
+              />
+            )}
 
-      {/* Sección de Cards */}
-      <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {/* Card 1 */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h2 className="text-xl font-semibold mb-2">WORKOUT GYM</h2>
-          <p className="text-gray-700">EQUIPO DE GYM</p>
-        </div>
+            <h1 className="text-3xl font-bold text-gray-900 mt-4">{project.titulo}</h1>
+            <p className="text-gray-600 mt-2">{project.descripcion}</p>
 
-        {/* Card 2 */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h2 className="text-xl font-semibold mb-2">Proyecto 2</h2>
-          <p className="text-gray-700">Descripción breve del proyecto 2.</p>
+            {/* Redes o Enlaces */}
+            {project.githubLink && (
+              <a
+                href={project.githubLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-block bg-blue-600 text-white px-6 py-2 rounded-lg shadow-md hover:bg-blue-700 transition"
+              >
+                Ver Proyecto
+              </a>
+            )}
+          </div>
         </div>
-
-        {/* Card 3 */}
-        <div className="bg-white rounded-lg shadow-lg p-4">
-          <h2 className="text-xl font-semibold mb-2">Proyecto 3</h2>
-          <p className="text-gray-700">Descripción breve del proyecto 3.</p>
-        </div>
-      </div>
+      ) : (
+        <p className="text-gray-500">Cargando currículum...</p>
+      )}
     </motion.div>
   );
 }
